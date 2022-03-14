@@ -39,7 +39,10 @@ public class StreamingMaxCapacityClient {
      */
     public static void main(String[] args) throws Exception {
         // Access a service running on the local machine on port 50051
-        String target = "10.0.0.123:50051";
+        if (args.length != 2) {
+            throw new Exception("Please provide target and full file path as arguments");
+        }
+        String target = args[0];
 
         // Create a communication channel to the server, known as a Channel. Channels are thread-safe
         // and reusable. It is common to create channels at the beginning of your application and reuse
@@ -78,7 +81,7 @@ public class StreamingMaxCapacityClient {
             }, timerInitialDelayMs, timerPeriodMs);
 
 
-            String fullFileName = "C:\\Users\\AbulHasan\\Videos\\MOVIES\\Hollywood\\Orphan.mp4";
+            String fullFileName = args[1];
             String[] fileArray = fullFileName.split("\\\\");
             String fileName = fileArray[fileArray.length - 1];
             FileInputStream fileInputStream = new FileInputStream(fullFileName);
@@ -86,13 +89,13 @@ public class StreamingMaxCapacityClient {
             StreamingMaxCapacityClient client = new StreamingMaxCapacityClient(channel);
 
             while (byteStart < fileBytes.size()) {
-                ByteString tempBuffer = fileBytes.substring(byteStart, Math.min(byteStart + byteSize.intValue(),fileBytes.size()));
+                ByteString tempBuffer = fileBytes.substring(byteStart, Math.min(byteStart + byteSize.intValue(), fileBytes.size()));
                 byteStart += byteSize.intValue();
                 client.uploadFile(tempBuffer, null, count.intValue(), null);
-                logger.log(Level.INFO, "Sent Payload number: {0}",count.intValue() );
+                logger.log(Level.INFO, "Sent Payload number: {0}", count.intValue());
                 count.incrementAndGet();
             }
-            logger.log(Level.INFO, "FileName:{0} ,total Size: {1}",new Object[]{fileName,count.intValue()} );
+            logger.log(Level.INFO, "FileName:{0} ,total Size: {1}", new Object[]{fileName, count.intValue()});
             client.uploadFile(null, fileName, -1, count.decrementAndGet());
             timer.cancel();
         } finally {
