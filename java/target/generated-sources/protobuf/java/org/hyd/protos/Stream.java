@@ -20,10 +20,10 @@ public final class Stream {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_stream_File_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_stream_HelloReply_descriptor;
+    internal_static_stream_Reply_descriptor;
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_stream_HelloReply_fieldAccessorTable;
+      internal_static_stream_Reply_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -36,10 +36,10 @@ public final class Stream {
       "\n\014stream.proto\022\006stream\"p\n\004File\022\r\n\005index\030" +
       "\001 \001(\005\022\017\n\007payload\030\002 \001(\014\022\026\n\ttotalsize\030\003 \001(" +
       "\005H\000\210\001\001\022\025\n\010filename\030\004 \001(\tH\001\210\001\001B\014\n\n_totals" +
-      "izeB\013\n\t_filename\"\035\n\nHelloReply\022\017\n\007messag" +
-      "e\030\001 \001(\t2=\n\tStreaming\0220\n\nUploadFile\022\014.str" +
-      "eam.File\032\022.stream.HelloReply\"\000B\022\n\016org.hy" +
-      "d.protosP\001b\006proto3"
+      "izeB\013\n\t_filename\"\030\n\005Reply\022\017\n\007message\030\001 \001" +
+      "(\t28\n\tStreaming\022+\n\nUploadFile\022\014.stream.F" +
+      "ile\032\r.stream.Reply\"\000B\022\n\016org.hyd.protosP\001" +
+      "b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -51,11 +51,11 @@ public final class Stream {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_stream_File_descriptor,
         new java.lang.String[] { "Index", "Payload", "Totalsize", "Filename", "Totalsize", "Filename", });
-    internal_static_stream_HelloReply_descriptor =
+    internal_static_stream_Reply_descriptor =
       getDescriptor().getMessageTypes().get(1);
-    internal_static_stream_HelloReply_fieldAccessorTable = new
+    internal_static_stream_Reply_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_stream_HelloReply_descriptor,
+        internal_static_stream_Reply_descriptor,
         new java.lang.String[] { "Message", });
   }
 

@@ -6,9 +6,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-<!--        <module name="grpc-streaming-lab" />-->
         <module name="java" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="java" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>

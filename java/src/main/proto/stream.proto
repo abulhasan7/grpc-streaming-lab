@@ -21,7 +21,7 @@ package stream;
 
 service Streaming {
 
-  rpc UploadFile (File) returns (HelloReply) {}
+  rpc UploadFile (File) returns (Reply) {}
 
 }
 
@@ -34,6 +34,6 @@ message File {
 }
 
 // The response message containing the greetings
-message HelloReply {
+message Reply {
   string message = 1;
 }

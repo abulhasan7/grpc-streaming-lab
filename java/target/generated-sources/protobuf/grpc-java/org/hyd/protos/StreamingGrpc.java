@@ -16,28 +16,28 @@ public final class StreamingGrpc {
 
   // Static method descriptors that strictly reflect the proto.
   private static volatile io.grpc.MethodDescriptor<org.hyd.protos.File,
-      org.hyd.protos.HelloReply> getUploadFileMethod;
+      org.hyd.protos.Reply> getUploadFileMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
       fullMethodName = SERVICE_NAME + '/' + "UploadFile",
       requestType = org.hyd.protos.File.class,
-      responseType = org.hyd.protos.HelloReply.class,
+      responseType = org.hyd.protos.Reply.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
   public static io.grpc.MethodDescriptor<org.hyd.protos.File,
-      org.hyd.protos.HelloReply> getUploadFileMethod() {
-    io.grpc.MethodDescriptor<org.hyd.protos.File, org.hyd.protos.HelloReply> getUploadFileMethod;
+      org.hyd.protos.Reply> getUploadFileMethod() {
+    io.grpc.MethodDescriptor<org.hyd.protos.File, org.hyd.protos.Reply> getUploadFileMethod;
     if ((getUploadFileMethod = StreamingGrpc.getUploadFileMethod) == null) {
       synchronized (StreamingGrpc.class) {
         if ((getUploadFileMethod = StreamingGrpc.getUploadFileMethod) == null) {
           StreamingGrpc.getUploadFileMethod = getUploadFileMethod =
-              io.grpc.MethodDescriptor.<org.hyd.protos.File, org.hyd.protos.HelloReply>newBuilder()
+              io.grpc.MethodDescriptor.<org.hyd.protos.File, org.hyd.protos.Reply>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
               .setFullMethodName(generateFullMethodName(SERVICE_NAME, "UploadFile"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   org.hyd.protos.File.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  org.hyd.protos.HelloReply.getDefaultInstance()))
+                  org.hyd.protos.Reply.getDefaultInstance()))
               .setSchemaDescriptor(new StreamingMethodDescriptorSupplier("UploadFile"))
               .build();
         }
@@ -97,7 +97,7 @@ public final class StreamingGrpc {
     /**
      */
     public void uploadFile(org.hyd.protos.File request,
-        io.grpc.stub.StreamObserver<org.hyd.protos.HelloReply> responseObserver) {
+        io.grpc.stub.StreamObserver<org.hyd.protos.Reply> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getUploadFileMethod(), responseObserver);
     }
 
@@ -108,7 +108,7 @@ public final class StreamingGrpc {
             io.grpc.stub.ServerCalls.asyncUnaryCall(
               new MethodHandlers<
                 org.hyd.protos.File,
-                org.hyd.protos.HelloReply>(
+                org.hyd.protos.Reply>(
                   this, METHODID_UPLOAD_FILE)))
           .build();
     }
@@ -131,7 +131,7 @@ public final class StreamingGrpc {
     /**
      */
     public void uploadFile(org.hyd.protos.File request,
-        io.grpc.stub.StreamObserver<org.hyd.protos.HelloReply> responseObserver) {
+        io.grpc.stub.StreamObserver<org.hyd.protos.Reply> responseObserver) {
       io.grpc.stub.ClientCalls.asyncUnaryCall(
           getChannel().newCall(getUploadFileMethod(), getCallOptions()), request, responseObserver);
     }
@@ -153,7 +153,7 @@ public final class StreamingGrpc {
 
     /**
      */
-    public org.hyd.protos.HelloReply uploadFile(org.hyd.protos.File request) {
+    public org.hyd.protos.Reply uploadFile(org.hyd.protos.File request) {
       return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getUploadFileMethod(), getCallOptions(), request);
     }
@@ -175,7 +175,7 @@ public final class StreamingGrpc {
 
     /**
      */
-    public com.google.common.util.concurrent.ListenableFuture<org.hyd.protos.HelloReply> uploadFile(
+    public com.google.common.util.concurrent.ListenableFuture<org.hyd.protos.Reply> uploadFile(
         org.hyd.protos.File request) {
       return io.grpc.stub.ClientCalls.futureUnaryCall(
           getChannel().newCall(getUploadFileMethod(), getCallOptions()), request);
@@ -203,7 +203,7 @@ public final class StreamingGrpc {
       switch (methodId) {
         case METHODID_UPLOAD_FILE:
           serviceImpl.uploadFile((org.hyd.protos.File) request,
-              (io.grpc.stub.StreamObserver<org.hyd.protos.HelloReply>) responseObserver);
+              (io.grpc.stub.StreamObserver<org.hyd.protos.Reply>) responseObserver);
           break;
         default:
           throw new AssertionError();
