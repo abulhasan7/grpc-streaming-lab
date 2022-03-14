@@ -13,7 +13,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class StreamingMaxCapacityClient {
@@ -68,14 +67,14 @@ public class StreamingMaxCapacityClient {
                 public void run() {
                     int totalBytesSent = (count.intValue() - previousCount.intValue()) * byteSize.intValue();
                     int throughputInSec = totalBytesSent / 10;
-                    logger.log(Level.INFO, "bytesize is : {0}, throughputInSec is: {1} ", new Integer[]{byteSize.intValue(), throughputInSec});
+                    System.out.println("bytesize is :"+byteSize.intValue()+" , throughputInSec is: "+throughputInSec);
                     if (throughputInSec > 4000000) {
                         throughputInSec = 4000000;
                     } else if (throughputInSec < 1024) {
                         throughputInSec = 1024;
                     }
                     byteSize.set(throughputInSec);
-                    logger.log(Level.INFO, "New byteSize is: {0}", byteSize.intValue());
+                    System.out.println("New byteSize is: {0}"+byteSize.intValue());
                     previousCount.set(count.intValue());
                 }
             }, timerInitialDelayMs, timerPeriodMs);
@@ -92,11 +91,11 @@ public class StreamingMaxCapacityClient {
                 ByteString tempBuffer = fileBytes.substring(byteStart, Math.min(byteStart + byteSize.intValue(), fileBytes.size()));
                 byteStart += byteSize.intValue();
                 client.uploadFile(tempBuffer, null, count.intValue(), null);
-                logger.log(Level.INFO, "Sent Payload number: {0}", count.intValue());
+               System.out.println("Sent Payload number: "+count.intValue());
                 count.incrementAndGet();
             }
-            logger.log(Level.INFO, "FileName:{0} ,total Size: {1}", new Object[]{fileName, count.intValue()});
             client.uploadFile(null, fileName, -1, count.decrementAndGet());
+            System.out.println("FileName: "+fileName+" ,total Size: "+count.intValue());
             timer.cancel();
         } finally {
             // ManagedChannels use resources like threads and TCP connections. To prevent leaking these
@@ -122,7 +121,7 @@ public class StreamingMaxCapacityClient {
             blockingStub.uploadFile(request);
 
         } catch (StatusRuntimeException e) {
-            logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
+            System.err.println("RPC failed: "+e.getStatus());
         }
     }
 }

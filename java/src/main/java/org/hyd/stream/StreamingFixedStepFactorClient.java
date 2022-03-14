@@ -13,7 +13,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class StreamingFixedStepFactorClient {
@@ -70,10 +69,10 @@ public class StreamingFixedStepFactorClient {
                     if (throughputInSec > threshold) {
                         byteSize.set((int) (byteSize.intValue() * (1 + stepFactor)));
 
-                        logger.log(Level.INFO,"Over threshold, New byteSize is: {}",byteSize.intValue());
+                        System.out.println("Over threshold, New byteSize is: " + byteSize.intValue());
                     } else {
                         byteSize.set((int) (byteSize.intValue() * (1 - stepFactor)));
-                        logger.log(Level.INFO,"Below threshold, New byteSize is: {}",byteSize.intValue());
+                        System.out.println("Below threshold, New byteSize is: " + byteSize.intValue());
 
                     }
                     previousCount.set(count.intValue());
@@ -86,7 +85,6 @@ public class StreamingFixedStepFactorClient {
             String fileName = fileArray[fileArray.length - 1];
             FileInputStream fileInputStream = new FileInputStream(fullFileName);
             ByteString fileBytes = ByteString.readFrom(fileInputStream);
-            System.out.println(fileBytes.size());
             StreamingFixedStepFactorClient client = new StreamingFixedStepFactorClient(channel);
 
             while (byteStart < fileBytes.size()) {
@@ -109,7 +107,7 @@ public class StreamingFixedStepFactorClient {
     /**
      * Say hello to server.
      */
-    public void uploadFile(ByteString fileBytes, String name, Integer index, Integer totalSize){
+    public void uploadFile(ByteString fileBytes, String name, Integer index, Integer totalSize) {
 
         try {
             File request;
@@ -121,7 +119,7 @@ public class StreamingFixedStepFactorClient {
             blockingStub.uploadFile(request);
 
         } catch (StatusRuntimeException e) {
-            logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
+            System.err.println("RPC failed: {0}" + e.getStatus());
         }
     }
 }
