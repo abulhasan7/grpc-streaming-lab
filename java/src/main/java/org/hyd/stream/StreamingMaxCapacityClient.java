@@ -67,14 +67,14 @@ public class StreamingMaxCapacityClient {
                 public void run() {
                     int totalBytesSent = (count.intValue() - previousCount.intValue()) * byteSize.intValue();
                     int throughputInSec = totalBytesSent / 10;
-                    System.out.println("bytesize is :"+byteSize.intValue()+" , throughputInSec is: "+throughputInSec);
+                    System.out.println("Current byteSize is :" + byteSize.intValue() + " , throughputInSec is: " + throughputInSec);
                     if (throughputInSec > 4000000) {
                         throughputInSec = 4000000;
                     } else if (throughputInSec < 1024) {
                         throughputInSec = 1024;
                     }
                     byteSize.set(throughputInSec);
-                    System.out.println("New byteSize is: {0}"+byteSize.intValue());
+                    System.out.println("New byteSize is: " + byteSize.intValue());
                     previousCount.set(count.intValue());
                 }
             }, timerInitialDelayMs, timerPeriodMs);
@@ -86,16 +86,35 @@ public class StreamingMaxCapacityClient {
             FileInputStream fileInputStream = new FileInputStream(fullFileName);
             ByteString fileBytes = ByteString.readFrom(fileInputStream);
             StreamingMaxCapacityClient client = new StreamingMaxCapacityClient(channel);
-
+            int byteEnd = 1;
             while (byteStart < fileBytes.size()) {
-                ByteString tempBuffer = fileBytes.substring(byteStart, Math.min(byteStart + byteSize.intValue(), fileBytes.size()));
+                byteEnd = Math.min(byteStart + byteSize.intValue(), fileBytes.size());
+                ByteString tempBuffer = fileBytes.substring(byteStart,byteEnd );
                 byteStart += byteSize.intValue();
-                client.uploadFile(tempBuffer, null, count.intValue(), null);
-               System.out.println("Sent Payload number: "+count.intValue());
+                //if failed retry, for set amount of time
+                int noOfRetry = 0;
+                boolean didRequestFail = true;
+                while (didRequestFail && (noOfRetry < 4)) {
+                    didRequestFail = client.uploadFile(tempBuffer, null, count.intValue(), null);
+
+                    if(didRequestFail){
+                        System.err.println("Chunk Number: "+count.intValue()+" failed"+"No of retries: "+noOfRetry);
+                    }
+                    noOfRetry++;
+
+                }
+                if(didRequestFail){
+                    System.err.println("File Upload Failed, Please try again!!!");
+                    break;
+                }
+
+                System.out.format("Sent Chunk number: " + count.intValue()+" | Progress: %.2f \n",(((double)byteEnd/fileBytes.size())*100));
                 count.incrementAndGet();
             }
-            client.uploadFile(null, fileName, -1, count.decrementAndGet());
-            System.out.println("FileName: "+fileName+" ,total Size: "+count.intValue());
+            if(byteEnd == fileBytes.size()){
+                client.uploadFile(null, fileName, -1, count.decrementAndGet());
+                System.out.println("File: " + fileName + "Successfully sent ,Total File Size: " +fileBytes.size()+"Total Chunks: " +count.intValue());
+            }
             timer.cancel();
         } finally {
             // ManagedChannels use resources like threads and TCP connections. To prevent leaking these
@@ -109,7 +128,7 @@ public class StreamingMaxCapacityClient {
     /**
      * Say hello to server.
      */
-    public void uploadFile(ByteString fileBytes, String name, Integer index, Integer totalSize) {
+    public boolean uploadFile(ByteString fileBytes, String name, Integer index, Integer totalSize) {
 
         try {
             File request;
@@ -119,9 +138,10 @@ public class StreamingMaxCapacityClient {
                 request = File.newBuilder().setFilename(name).setIndex(index).setTotalsize(totalSize).build();
             }
             blockingStub.uploadFile(request);
-
+            return false;
         } catch (StatusRuntimeException e) {
-            System.err.println("RPC failed: "+e.getStatus());
+            System.err.println("RPC failed: " + e.getStatus());
+            return true;
         }
     }
 }
