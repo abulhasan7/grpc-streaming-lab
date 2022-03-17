@@ -55,23 +55,36 @@ public class StreamingFixedStepFactorClient {
             AtomicInteger byteSize = new AtomicInteger(2000000);
             int byteStart = 0;
             AtomicInteger count = new AtomicInteger(1);
-            AtomicInteger previousCount = new AtomicInteger(1);
-            int threshold = 1000000;
+            AtomicInteger previousCount = new AtomicInteger(0);
+            int threshold = 2000000;
             double stepFactor = 0.1;
-            long timerPeriodMs = 10000;
-            long timerInitialDelayMs = 10000;
+            long timerPeriodMs = 20000;
+            long timerInitialDelayMs = 20000;
             Timer timer = new Timer();
             timer.scheduleAtFixedRate(new TimerTask() {
                 @Override
                 public void run() {
                     int totalBytesSent = (count.intValue() - previousCount.intValue()) * byteSize.intValue();
-                    int throughputInSec = totalBytesSent / 10;
+                    int throughputInSec = totalBytesSent / 20;
                     if (throughputInSec > threshold) {
-                        byteSize.set((int) (byteSize.intValue() * (1 + stepFactor)));
+                        int byteS = (int) (byteSize.intValue() * (1 + stepFactor));
+                        if(byteS>2000000){
+                            byteS = 2000000;
+                        }else if(byteS<1024){
+                            byteS = 1024;
+                        }
+                        byteSize.set(byteS);
 
                         System.out.println("Over threshold, New byteSize is: " + byteSize.intValue());
                     } else {
-                        byteSize.set((int) (byteSize.intValue() * (1 - stepFactor)));
+                        int byteS = (int) (byteSize.intValue() * (1 - stepFactor));
+                        if(byteS>2000000){
+                            byteS = 2000000;
+                        }else if(byteS<1024){
+                            byteS = 1024;
+                        }
+                        byteSize.set(byteS);
+                        byteSize.set(byteS);
                         System.out.println("Below threshold, New byteSize is: " + byteSize.intValue());
 
                     }
@@ -80,7 +93,7 @@ public class StreamingFixedStepFactorClient {
             }, timerInitialDelayMs, timerPeriodMs);
 
 
-            String fullFileName = "C:\\Users\\AbulHasan\\Videos\\MOVIES\\Hollywood\\Orphan.mp4";
+            String fullFileName = "C:\\Users\\AbulHasan\\Videos\\MOVIES\\Bollywood\\Dil Chahta Hai.mp4";
             String[] fileArray = fullFileName.split("\\\\");
             String fileName = fileArray[fileArray.length - 1];
             FileInputStream fileInputStream = new FileInputStream(fullFileName);
@@ -93,7 +106,7 @@ public class StreamingFixedStepFactorClient {
                 count.incrementAndGet();
                 byteStart += byteSize.intValue();
             }
-            client.uploadFile(null, fileName, -1, count.intValue());
+            client.uploadFile(null, fileName, -1, count.decrementAndGet());
             timer.cancel();
         } finally {
             // ManagedChannels use resources like threads and TCP connections. To prevent leaking these

@@ -59,17 +59,17 @@ public class StreamingMaxCapacityClient {
             int byteStart = 0;
             AtomicInteger count = new AtomicInteger(1);
             AtomicInteger previousCount = new AtomicInteger(0);
-            long timerPeriodMs = 10000;
-            long timerInitialDelayMs = 10000;
+            long timerPeriodMs = 20000;
+            long timerInitialDelayMs = 20000;
             Timer timer = new Timer();
             timer.scheduleAtFixedRate(new TimerTask() {
                 @Override
                 public void run() {
                     int totalBytesSent = (count.intValue() - previousCount.intValue()) * byteSize.intValue();
-                    int throughputInSec = totalBytesSent / 10;
+                    int throughputInSec = totalBytesSent / 20;
                     System.out.println("Current byteSize is :" + byteSize.intValue() + " , throughputInSec is: " + throughputInSec);
-                    if (throughputInSec > 4000000) {
-                        throughputInSec = 4000000;
+                    if (throughputInSec > 2000000) {
+                        throughputInSec = 2000000;
                     } else if (throughputInSec < 1024) {
                         throughputInSec = 1024;
                     }
@@ -98,7 +98,7 @@ public class StreamingMaxCapacityClient {
                     didRequestFail = client.uploadFile(tempBuffer, null, count.intValue(), null);
 
                     if(didRequestFail){
-                        System.err.println("Chunk Number: "+count.intValue()+" failed"+"No of retries: "+noOfRetry);
+//                        System.err.println("Chunk Number: "+count.intValue()+" failed"+"No of retries: "+noOfRetry);
                     }
                     noOfRetry++;
 
@@ -108,12 +108,12 @@ public class StreamingMaxCapacityClient {
                     break;
                 }
 
-                System.out.format("Sent Chunk number: " + count.intValue()+" | Progress: %.2f \n",(((double)byteEnd/fileBytes.size())*100));
+//                System.out.format("Sent Chunk number: " + count.intValue()+" | Progress: %.2f \n",(((double)byteEnd/fileBytes.size())*100));
                 count.incrementAndGet();
             }
             if(byteEnd == fileBytes.size()){
                 client.uploadFile(null, fileName, -1, count.decrementAndGet());
-                System.out.println("File: " + fileName + "Successfully sent ,Total File Size: " +fileBytes.size()+"Total Chunks: " +count.intValue());
+//                System.out.println("File: " + fileName + "Successfully sent ,Total File Size: " +fileBytes.size()+"Total Chunks: " +count.intValue());
             }
             timer.cancel();
         } finally {
